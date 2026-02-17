@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheers, Medula</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400&family=Playfair+Display:italic&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #121212;
+            --accent: #d4af37;
+            --paper: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Countdown Style */
+        #countdown {
+            font-weight: 200;
+            letter-spacing: 0.5rem;
+            font-size: 1.2rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 0.6rem;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        /* Single Row Wall */
+        .wall-row {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            perspective: 1000px;
+            max-width: 90vw;
+            overflow-x: auto;
+            scrollbar-width: none; /* Hide scrollbar Firefox */
+        }
+
+        .wall-row::-webkit-scrollbar { display: none; } /* Hide scrollbar Chrome/Safari */
+
+        .photo {
+            flex: 0 0 auto;
+            background: var(--paper);
+            padding: 10px 10px 30px 10px;
+            width: 180px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            filter: grayscale(30%);
+        }
+
+        .photo:hover {
+            transform: scale(1.1) rotate(0deg) !important;
+            z-index: 10;
+            filter: grayscale(0%);
+        }
+
+        .caption {
+            font-family: 'Playfair Display', serif;
+            color: #333;
+            text-align: center;
+            font-size: 0.8rem;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; letter-spacing: 0.3rem; }
+            .photo { width: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="countdown">00:00:00:00</div>
+
+    <header>
+        <h1>Cheers, Medula</h1>
+        <p class="subtitle">Until our next round.</p>
+    </header>
+
+    <div class="wall-row" id="wall">
+        </div>
+
+    <script>
+        // COUNTDOWN LOGIC (Target: March 20, 2026 IST)
+        const targetDate = new Date("March 20, 2026 00:00:00").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("countdown").innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (distance < 0) {
+                document.getElementById("countdown").innerHTML = "HAPPY NEW CHAPTER";
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        // PHOTO WALL LOGIC
+        const memories = [
+            { url: 'assets/20250817_160203.jpg', label: 'The Laughs' },
+            { url: 'assets/20251004_180951.jpg', label: 'Kattan Chai Alliance Formation Day' },
+            { url: 'assets/20250817_163225.jpg', label: 'Not really sure what she is doing here' },
+            { url: 'assets/20250817_163545.jpg', label: 'The Crew' }
+        ];
+
+        const wall = document.getElementById('wall');
+
+        memories.forEach((item, i) => {
+            const frame = document.createElement('div');
+            frame.className = 'photo';
+            
+            // Random slight tilt for the bar-wall look
+            const tilt = (Math.random() * 6) - 3;
+            frame.style.transform = `rotate(${tilt}deg)`;
+
+            frame.innerHTML = `
+                <img src="${item.url}" alt="Memory">
+                <div class="caption">${item.label}</div>
+            `;
+            wall.appendChild(frame);
+        });
+    </script>
+</body>
+</html>
